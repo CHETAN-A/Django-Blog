@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- {{ block.super }} -->
+<div class="col-sm=6 col-sm-offset-3">
+	<h3>Form</h3>
+
+	<form method="POST" action='' enctype="multipart/form-data">{% csrf_token %}
+		{{form.as_p}}
+		<input class="btn btn-default" type="submit" name="createPost">
+	</form>
+</div>
+{% endblock content %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+<div class="col-sm-8 col-sm-offset-2 center">
+	<h1>{{title}}</h1>
+
+{% for obj in allobj%}
+<div class="row">
+	<div class="col-sm-12">
+		<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted;">
+			<div class="caption">
+				{% if obj.image %}
+				<img src="{{obj.image.url}}" class="img-responsive"/>
+				{% endif %}
+				<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
+				<p>{{obj.content|linebreaks|truncatechars:80}}</p>
+				<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
+			</div>
+		</div>
+	</div>
+<!-- {% cycle "" "<div class='col-sm-12'><hr/></div></div><div class='row'>" %} -->
+</div>
+<hr/>
+{% endfor%}
+
+	<div class="pagination">
+    <span class="step-links">
+        {% if allobj.has_previous %}
+            <a href="?{{page}}={{ allobj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ allobj.number }} of {{ allobj.paginator.num_pages }}.
+        </span>
+
+        {% if allobj.has_next %}
+            <a href="?{{page}}={{ allobj.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+
+</div>
+
+{% endblock content %}
