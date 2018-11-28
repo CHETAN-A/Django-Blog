@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.conf import settings
 from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
@@ -10,6 +11,7 @@ from django.utils.text import slugify
 
 class Post(models.Model):
 	"""Model for Post"""
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, default= 1)
 	title = models.CharField(max_length = 120)
 	content = models.TextField()
 	slug = models.SlugField(unique = True)

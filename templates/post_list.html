@@ -15,6 +15,7 @@
 				<img src="{{obj.image.url}}" class="img-responsive"/>
 				{% endif %}
 				<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
+				<p>Author : {{obj.user}}</p>
 				<p>{{obj.content|linebreaks|truncatechars:80}}</p>
 				<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
 			</div>

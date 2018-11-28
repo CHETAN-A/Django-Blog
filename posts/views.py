@@ -12,12 +12,15 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 def create(request):
 	if not request.user.is_superuser or not request.user.is_staff:
 		raise Http404
+	if not request.user.is_authenticated():
+		raise Http404
 	form = PostForm(request.POST or None, request.FILES or None)
 	if request.method == "POST":
 		print("begin")
 		if form.is_valid():
 			print("process")
 			instance = form.save(commit=False)
+			instance.user = request.user
 			instance.save()
 			messages.success(request,"Successfully Created")
 			return HttpResponseRedirect(instance.get_abs_url())
