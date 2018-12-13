@@ -1,11 +1,16 @@
-{% extends "base.html" %}
+{% extends "dashboard.html" %}
+{% block createactive %}active {% endblock createactive %}
+{% block headOfpage %} Create a Post {% endblock headOfpage %}
 {% block content %}
 <!-- {{ block.super }} -->
-<div class="col-sm=6 col-sm-offset-3">
-	<h3>Form</h3>
+<div class="col-sm-6" style=" margin-top: 5%; margin-left: 30%; ">
+	<!-- <h3>Form</h3> -->
 
-	<form method="POST" action='' enctype="multipart/form-data">{% csrf_token %}
+	<form method="POST" action='{% url "posts:create" %}' enctype="multipart/form-data">{% csrf_token %}
 		{{form.as_p}}
+		<!-- <input type="text" name="title"/>
+		<input type="textarea" name="content"/>
+		<input type="file" name="image" accept="image/*" /> -->
 		<input class="btn btn-default" type="submit" name="createPost">
 	</form>
 </div>

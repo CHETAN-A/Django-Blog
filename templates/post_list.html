@@ -1,15 +1,16 @@
-{% extends "base.html" %}
+{% extends "dashboard.html" %}
+{% block active %} active{% endblock active %}
+{% block headOfpage %} {{title}} {% endblock headOfpage %}
 {% block content %}
 
 
-
 <div class="col-sm-8 col-sm-offset-2 center">
-	<h1>{{title}}</h1>
-
+	<!-- <h1>{{title}}</h1>
+ -->
 {% for obj in allobj%}
 <div class="row">
 	<div class="col-sm-12">
-		<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted;">
+		<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted; border-radius: 5%; border: groove; margin-top: 5%">
 			<div class="caption">
 				{% if obj.image %}
 				<img src="{{obj.image.url}}" class="img-responsive"/>

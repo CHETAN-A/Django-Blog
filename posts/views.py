@@ -19,6 +19,10 @@ def create(request):
 		print("begin")
 		if form.is_valid():
 			print("process")
+			title = form.cleaned_data['title']
+			content = form.cleaned_data['content']
+			print(title)
+			print(content)
 			instance = form.save(commit=False)
 			instance.user = request.user
 			instance.save()
@@ -99,3 +103,6 @@ def delete(request, slug=None):
 	instance.delete()
 	messages.success(request,"Item Deleted")
 	return redirect("posts:list")
+
+def table(request):
+	return render(request,'table.html')
