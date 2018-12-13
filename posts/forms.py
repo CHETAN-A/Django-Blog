@@ -6,5 +6,5 @@ class PostForm(forms.ModelForm):
 	class Meta:
 		"""docstring for Meta"""
 		model = Post
-		fields = ["title","content","image"]
+		fields = ["title","content","image","draft","publish"]
 			

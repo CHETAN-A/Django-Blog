@@ -4,11 +4,12 @@
 
 {% block content %}
 <div class="row">
-<div class="col-sm-10 col-sm-offset-3">
-	<h3>{{title}}  <small>{{obj.timestamp}}</small></h3>
+<div class="col-sm-10 col-sm-offset-3" style="padding-left: 10%;">
+	<h3>{{title}}  <small>{% if obj.draft %} <span style="color: red;">Draft</span>{% endif %}{{obj.publish}}</small></h3>
 	{% if obj.image %}
 	<img src='{{ obj.image.url }}' class="img-responsive" />
 	{% endif %}
+	<div style="float: right;"><a href="{{obj.get_abs_editurl}}" class="btn btn-primary" role="button"> Edit </a> or <a href="{{obj.get_abs_deleteurl}}" class="btn btn-primary" role="button"> Delete </a> </div>
 	<p>Author : {{obj.user}}</p>
 	<hr/>
 	<p><div class="fb-like" data-href="{{ request.build_absolute_uri }}" data-layout="standard" data-action="like" data-size="small" data-show-faces="false" data-share="true"></div></p>

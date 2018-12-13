@@ -6,8 +6,14 @@ from django.conf import settings
 from django.db.models.signals import pre_save
 from django.core.urlresolvers import reverse
 from django.utils.text import slugify
+from django.utils import timezone
 
 # Create your models here.
+
+class PostManager(models.Manager):
+	def active(self,*args,**kwargs):
+		return super(PostManager, self).filter(draft=False).filter(publish__lte=timezone.now())
+
 
 class Post(models.Model):
 	"""Model for Post"""
@@ -15,12 +21,15 @@ class Post(models.Model):
 	title = models.CharField(max_length = 120)
 	content = models.TextField()
 	slug = models.SlugField(unique = True)
+	draft = models.BooleanField(default= False)
+	publish = models.DateField(auto_now= False,auto_now_add = False)
 	image = models.ImageField(null = True, blank = True,height_field="height_field",width_field="width_field")
 	height_field = models.IntegerField(default=0)
 	width_field = models.IntegerField(default=0)
 	updated = models.DateTimeField(auto_now = True, auto_now_add = False)
 	timestamp = models.DateTimeField(auto_now = False, auto_now_add = True)
 
+	objects = PostManager()
 	def __str__(self):
 		return self.title
 
@@ -29,6 +38,12 @@ class Post(models.Model):
 
 	def get_abs_url(self):
 		return reverse("posts:detail",kwargs = {"slug":self.slug})
+
+	def get_abs_editurl(self):
+		return reverse("posts:update",kwargs = {"slug":self.slug})
+
+	def get_abs_deleteurl(self):
+		return reverse("posts:delete",kwargs = {"slug":self.slug})
 		# return "/posts/%s" %(self.id)
 
 	class Meta:

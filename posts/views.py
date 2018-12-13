@@ -5,7 +5,9 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
+from django.utils import timezone
 from .forms import PostForm
+from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 # Create your views here.
 
@@ -41,6 +43,9 @@ def create(request):
 
 def detail(request,slug):
 	instance = get_object_or_404(Post, slug=slug)
+	if instance.draft or instance.publish > timezone.now().date():
+		if not request.user.is_superuser or not request.user.is_staff:
+			raise Http404
 	share_str = quote_plus(instance.content.encode('utf-8'))
 	context = {
 	"title" : instance.title,
@@ -50,9 +55,19 @@ def detail(request,slug):
 	return render(request,"post_detail.html",context)
 
 def list(request):
-	allobj_list = Post.objects.all() #.order_by("-timestamp")
+	allobj_list = Post.objects.active() #.order_by("-timestamp")
+	if request.user.is_superuser or request.user.is_staff:
+		allobj_list = Post.objects.all()
+	if request.method == "GET":
+		query = request.GET.get("q")
+		if query:
+			allobj_list = allobj_list.filter(
+				Q(title__icontains=query)|
+				Q(content__icontains=query)|
+				Q(user__first_name__icontains=query)|
+				Q(user__last_name__icontains=query)
+				).distinct()
 	paginator = Paginator(allobj_list, 6) # Show 25 contacts per page
-
 	page_request_var = 'page'
 	page = request.GET.get(page_request_var)
 	try:
@@ -63,10 +78,12 @@ def list(request):
 	except EmptyPage:
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		allobj = paginator.page(paginator.num_pages)
+	today = timezone.now().date()
 	context = {
 	"allobj":allobj,
 	"title" : "Posts",
-	"page" : page_request_var
+	"page" : page_request_var,
+	"today" : today
 	}
 	# if request.user.is_authenticated():
 	# 	context = {

@@ -3,46 +3,52 @@
 {% block headOfpage %} {{title}} {% endblock headOfpage %}
 {% block content %}
 
-
-<div class="col-sm-8 col-sm-offset-2 center">
-	<!-- <h1>{{title}}</h1>
- -->
-{% for obj in allobj%}
 <div class="row">
-	<div class="col-sm-12">
-		<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted; border-radius: 5%; border: groove; margin-top: 5%">
-			<div class="caption">
-				{% if obj.image %}
-				<img src="{{obj.image.url}}" class="img-responsive"/>
-				{% endif %}
-				<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
-				<p>Author : {{obj.user}}</p>
-				<p>{{obj.content|linebreaks|truncatechars:80}}</p>
-				<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
+	<div class="col-md-2"></div>
+	<div class="col-sm-8 col-sm-offset-2 center">
+		<!-- <h1>{{title}}</h1>-->
+		<form method = 'GET' action="">
+			<input type="text" name="q" placeholder="Search Posts" value="{{request.GET.q}}" />
+			<input type="submit" name="Search"/>
+		</form>
+	{% for obj in allobj%}
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted; border-radius: 5%; border: groove; margin-top: 5%">
+				<div class="caption">
+					{% if obj.image %}
+					<img src="{{obj.image.url}}" class="img-responsive"/>
+					{% endif %}
+					{% if obj.draft %} <h3>Draft</h3>{% endif %} {% if obj.publish > today %} <h3>Future Post</h3>{% endif %}
+					<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
+					<p>Author : {{obj.user}}</p>
+					<p>{{obj.content|linebreaks|truncatechars:80}}</p>
+					<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
+				</div>
 			</div>
 		</div>
+	<!-- {% cycle "" "<div class='col-sm-12'><hr/></div></div><div class='row'>" %} -->
 	</div>
-<!-- {% cycle "" "<div class='col-sm-12'><hr/></div></div><div class='row'>" %} -->
-</div>
-<hr/>
-{% endfor%}
+	<hr/>
+	{% endfor%}
 
-	<div class="pagination">
-    <span class="step-links">
-        {% if allobj.has_previous %}
-            <a href="?{{page}}={{ allobj.previous_page_number }}">previous</a>
-        {% endif %}
+		<div class="pagination">
+	    <span class="step-links">
+	        {% if allobj.has_previous %}
+	            <a href="?{{page}}={{ allobj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+	        {% endif %}
 
-        <span class="current">
-            Page {{ allobj.number }} of {{ allobj.paginator.num_pages }}.
-        </span>
+	        <span class="current">
+	            Page {{ allobj.number }} of {{ allobj.paginator.num_pages }}.
+	        </span>
 
-        {% if allobj.has_next %}
-            <a href="?{{page}}={{ allobj.next_page_number }}">next</a>
-        {% endif %}
-    </span>
-</div>
+	        {% if allobj.has_next %}
+	            <a href="?{{page}}={{ allobj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+	        {% endif %}
+	    </span>
+	</div>
 
+	</div>
 </div>
 
 {% endblock content %}
