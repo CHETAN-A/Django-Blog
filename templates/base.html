@@ -6,7 +6,8 @@
 	<title>{% block head_title%} My Blog {% endblock head_title%}</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
-	<script type="text/javascript">
+	<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- <script type="text/javascript">
 		document.addEventListener('contextmenu', function(e) {
 		  e.preventDefault();
 		});
@@ -27,7 +28,8 @@
 		     return false;
 		  }
 		}
-	</script>
+	</script> -->
+	{% block head_extra %} {% endblock head_extra %}
 </head>
 <body>
 		<div id="fb-root"></div>
@@ -41,13 +43,59 @@
 
 	{% include "message_display.html" %}
 	<div class="container">
+		{% block headOfpage %} {% endblock headOfpage %}
 		{% block content %}
 		{% endblock content %}
 	</div>
 </body>
-<script type="text/javascript">
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+
+        $(".content_markdown").each(function(){
+
+            var content = $(this).text();
+            var markedContent = marked(content);
+            $(this).html(markedContent);
+            
+        })
+
+        $(".post_detail_item img").each(function(){
+            $(this).addClass("img-responsive");
+        })
+
+        var titleitem = $("#id_title");
+        
+        function setTitle(value) {
+            $("#preview_title").text(value);
+        }
+        setTitle(titleitem.val());
+        titleitem.keyup(function(){
+            setTitle($(this).val());
+        })
+
+        var contentitem = $("#id_content");
+
+        function setContent(value) {
+            var markedContent = marked(value)
+            $("#preview_content").html(markedContent);
+
+            $("#preview_content img").each(function(){
+                $(this).addClass('img-responsive');
+            })
+        }
+        setContent(contentitem.val())
+
+        contentitem.keyup(function() {
+            var newcontent = $(this).val();
+            setContent(newcontent);
+        })
+    })
+  </script>
 </script>
 </html>

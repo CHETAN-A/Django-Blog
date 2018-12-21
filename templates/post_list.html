@@ -7,22 +7,27 @@
 	<div class="col-md-2"></div>
 	<div class="col-sm-8 col-sm-offset-2 center">
 		<!-- <h1>{{title}}</h1>-->
-		<form method = 'GET' action="">
-			<input type="text" name="q" placeholder="Search Posts" value="{{request.GET.q}}" />
-			<input type="submit" name="Search"/>
+		<form method = 'GET' action="" class="row">
+			<div class="col-sm-6">
+				<div class="input-group">
+					<input class="form-control" type="text" name="q" placeholder="Search Posts" value="{{request.GET.q}}" />
+					<!-- <input class="btn btn-default" type="submit" name="Search"/> -->
+					<button class="btn btn-default" type="submit">Search<i class="fa fa-search"></i></button>
+				</div>
+			</div>
 		</form>
 	{% for obj in allobj%}
 	<div class="row">
-		<div class="col-sm-12">
-			<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted; border-radius: 5%; border: groove; margin-top: 5%">
-				<div class="caption">
+		<div class="col-sm-8">
+			<div class="thumbnail" style="border: 0.5px; padding: 4px; border-style: dotted; border-radius: 5%; border: groove; margin-top: 5%;">
+				<div class="caption post_detail_item">
 					{% if obj.image %}
-					<img src="{{obj.image.url}}" class="img-responsive"/>
+					<img src="{{obj.image.url}}" class="img-responsive" style="width: 100%" />
 					{% endif %}
 					{% if obj.draft %} <h3>Draft</h3>{% endif %} {% if obj.publish > today %} <h3>Future Post</h3>{% endif %}
 					<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
 					<p>Author : {{obj.user}}</p>
-					<p>{{obj.content|linebreaks|truncatechars:80}}</p>
+					<p class="">{{obj.get_markdown|truncatechars_html:120}}</p>
 					<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
 				</div>
 			</div>

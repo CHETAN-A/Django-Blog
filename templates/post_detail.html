@@ -1,10 +1,10 @@
-{% extends "dashboard.html" %}
+{% extends "base.html" %}
 {% load urlify %}
-{% block head_title%} {{ obj.title}} | {{block.super}} {% endblock head_title%}
-
+{% block head_title %} {{ obj.title}} | {{block.super}} {% endblock head_title %}
+{% load crispy_forms_tags %}
 {% block content %}
 <div class="row">
-<div class="col-sm-10 col-sm-offset-3" style="padding-left: 10%;">
+<div class="col-sm-12" style="padding-left: 10%;">
 	<h3>{{title}}  <small>{% if obj.draft %} <span style="color: red;">Draft</span>{% endif %}{{obj.publish}}</small></h3>
 	{% if obj.image %}
 	<img src='{{ obj.image.url }}' class="img-responsive" />
@@ -20,8 +20,33 @@
 	Twitter
 	</a>
 	<a href="http://www.reddit.com/submit?url={{ request.build_absolute_uri }}&title={{obj.title}}" target="_blank">Reddit</a> -->
-	<p>{{obj.content | linebreaks}}<br/></p>
-	<div class="fb-comments" data-href="{{ request.build_absolute_uri}}" data-numposts="5"></div>
+	<div class="post_detail_item">
+		<p name="content">{{ obj.get_markdown }}<br/></p>
+	</div>
+	<div>
+		<p class="lead"> Comments</p>
+		<form method="POST" action=".">{% csrf_token %}
+		{{comment_form|crispy}}
+		<input type="submit" name="" value="Post Comment" class="btn btn-default">
+		</form>
+		<hr/>
+			{% for comment in comments %}
+
+			<blockquote class="blockquote">
+			  <p class="mb-0">{{comment.content}}</p>
+			  <footer class="blockquote-footer">By {{comment.user}} | {{comment.timestamp|timesince}} ago </cite></footer>
+
+				<form method="POST" action=".">{% csrf_token %}
+					{{comment_form|crispy}}
+					<input type="hidden" name="parent_id" value="{{comment.id}}">
+					<input type="submit" name="" value="Reply" class="btn btn-default">
+				</form>
+
+			</blockquote>
+			<hr/>
+			{% endfor %}
+	</div>
+	<!-- <div class="fb-comments" data-href="{{ request.build_absolute_uri}}" data-numposts="5"></div> -->
 </div>
 </div>
 {% endblock content %}

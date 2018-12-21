@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from urllib import quote_plus
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
@@ -9,6 +10,8 @@ from django.utils import timezone
 from .forms import PostForm
 from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from comments.models import Comment
+from comments.forms import CommentForm
 # Create your views here.
 
 def create(request):
@@ -18,13 +21,9 @@ def create(request):
 		raise Http404
 	form = PostForm(request.POST or None, request.FILES or None)
 	if request.method == "POST":
-		print("begin")
 		if form.is_valid():
-			print("process")
 			title = form.cleaned_data['title']
 			content = form.cleaned_data['content']
-			print(title)
-			print(content)
 			instance = form.save(commit=False)
 			instance.user = request.user
 			instance.save()
@@ -33,9 +32,6 @@ def create(request):
 		else:
 			print("else")
 			messages.error(request,"Not Successfully Created")
-	# if request.method == "POST":
-	# 	print request.POST.get("content")
-	# 	print request.POST.get("title")
 	context = {
 	"form": form,
 	}
@@ -47,10 +43,46 @@ def detail(request,slug):
 		if not request.user.is_superuser or not request.user.is_staff:
 			raise Http404
 	share_str = quote_plus(instance.content.encode('utf-8'))
+
+	initial_data = {
+					"content_type":instance.get_content_type,
+					"object_id": instance.id
+					}
+	form = CommentForm(request.POST or None, initial = initial_data)
+	if form.is_valid():
+		c_type = form.cleaned_data.get("content_type")
+		content_type = ContentType.objects.get(model=c_type)
+		parent_obj = None
+		try:
+			print(form.cleaned_data)
+			parent_id = int(request.POST.get("parent_id"))
+		except:
+			parent_id = None
+		if parent_id:
+			parent_qs = Comment.objects.filter(id=parent_id)
+			if parent_qs.exists() and parent_qs.count() == 1:
+				parent_obj = parent_qs.first()
+
+		obj_id = form.cleaned_data.get('object_id')
+		content_data = form.cleaned_data.get("content")
+		new_comment, created = Comment.objects.get_or_create(
+													user=request.user,
+													content_type=content_type,
+													object_id=obj_id,
+													content=content_data,
+													parent=parent_obj
+												)
+		return HttpResponseRedirect(new_comment.content_object.get_abs_url())
+		if created:
+			print("yeah it worked")
+
+	comments = instance.comments
 	context = {
 	"title" : instance.title,
 	"obj": instance,
 	"share_str": share_str,
+	"comments": comments,
+	"comment_form":form
 	}
 	return render(request,"post_detail.html",context)
 
