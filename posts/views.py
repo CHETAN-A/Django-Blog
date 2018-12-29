@@ -58,6 +58,7 @@ def detail(request,slug):
 			parent_id = int(request.POST.get("parent_id"))
 		except:
 			parent_id = None
+		print(parent_id)
 		if parent_id:
 			parent_qs = Comment.objects.filter(id=parent_id)
 			if parent_qs.exists() and parent_qs.count() == 1:
@@ -72,9 +73,11 @@ def detail(request,slug):
 													content=content_data,
 													parent=parent_obj
 												)
-		return HttpResponseRedirect(new_comment.content_object.get_abs_url())
 		if created:
 			print("yeah it worked")
+			print(created)
+		return HttpResponseRedirect(new_comment.content_object.get_abs_url())
+		
 
 	comments = instance.comments
 	context = {

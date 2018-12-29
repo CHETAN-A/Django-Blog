@@ -5,3 +5,8 @@ h3{
 	margin-left : 0% !important;
 	margin-right: 0% !important;
 }
+
+.comment-reply{
+	display: none;
+	padding-left: 10%;
+}
