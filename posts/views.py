@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from comments.models import Comment
 from comments.forms import CommentForm
+from .utils import get_read_time
 # Create your views here.
 
 def create(request):
@@ -43,13 +44,13 @@ def detail(request,slug):
 		if not request.user.is_superuser or not request.user.is_staff:
 			raise Http404
 	share_str = quote_plus(instance.content.encode('utf-8'))
-
+	print(get_read_time(instance.get_markdown()))
 	initial_data = {
 					"content_type":instance.get_content_type,
 					"object_id": instance.id
 					}
 	form = CommentForm(request.POST or None, initial = initial_data)
-	if form.is_valid():
+	if form.is_valid() and request.user.is_authenticated():
 		c_type = form.cleaned_data.get("content_type")
 		content_type = ContentType.objects.get(model=c_type)
 		parent_obj = None

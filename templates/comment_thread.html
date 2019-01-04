@@ -1,1 +1,29 @@
-{{obj}}
+{% extends "dashboard.html" %}
+{% load urlify %}
+{% block head_title %} {{ obj.title}} | {{block.super}} {% endblock head_title %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-12" style="padding-left: 10%;">
+	  <p class="mb-0">{{comment.content}}</p>
+	  <footer class="blockquote-footer">By {{comment.user}} | {{comment.timestamp|timesince}} ago | {% if comment.children.count > 0 %} {{ comment.children.count}} Comment{% if comment.children.count > 1 %}s{% endif %}  {% endif %}</cite></footer>
+	  <hr/>
+	  {% for child_comment in comment.children %}
+		<blockquote class="blockquote">
+		  <p class="mb-0">{{child_comment.content}}</p>
+		  <footer class="blockquote-footer">By {{child_comment.user}} | {{comment.timestamp|timesince}} ago </cite></footer>
+
+		</blockquote>
+	  {% endfor %}
+	  	{% if request.user.is_authenticated %}
+		<form method="POST" action=".">{% csrf_token %}
+			{{form|crispy}}
+			<input type="hidden" name="parent_id" value="{{comment.id}}">
+			<input type="submit" name="" value="Reply" class="btn btn-default">
+		</form>
+		{% else %}
+		<p>You must login to reply</p>
+		{% endif %}
+	</div>
+</div>
+{% endblock content %}

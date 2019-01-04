@@ -5,10 +5,11 @@ from django.db import models
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 # from posts.models import Post
 # Create your models here.
 class CommentManager(models.Manager):
-	def all():
+	def active():
 		qs = super(CommentManager,self).filter(parent=None)
 		return qs
 		
@@ -28,13 +29,20 @@ class Comment(models.Model):
 	content = models.TextField()
 	timestamp = models.DateTimeField(auto_now_add= True)
 	objects = CommentManager()
+
 	class Meta:
 		ordering = ['-timestamp']
 	def __unicode__(self):
 		return str(self.user.username)
 
 	def __str__(self):
-		return str(self.object_id)
+		return str(self.id)
+
+	def get_abs_url(self):
+		return reverse("comments:comment_thread",kwargs={"idvalue":self.id})
+
+	def get_del_url(self):
+		return reverse("comments:comment_delete",kwargs={"idvalue":self.id})
 
 	def children(self):
 		return Comment.objects.filter(parent=self)

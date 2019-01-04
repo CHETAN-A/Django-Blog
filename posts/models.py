@@ -11,6 +11,7 @@ from django.utils.safestring import mark_safe
 from markdown_deux import markdown
 from comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from .utils import get_read_time
 # Create your models here.
 
 class PostManager(models.Manager):
@@ -31,6 +32,7 @@ class Post(models.Model):
 	width_field = models.IntegerField(default=0)
 	updated = models.DateTimeField(auto_now = True, auto_now_add = False)
 	timestamp = models.DateTimeField(auto_now = False, auto_now_add = True)
+	read_time = models.IntegerField(null=True) #models.TimeField(null=True, blank=True)
 
 	objects = PostManager()
 	def __str__(self):
@@ -88,5 +90,9 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 	# instance.slug = slug
 	if not instance.slug:
 		instance.slug = create_slug(instance)
+	if instance.content:
+		html_str= instance.get_markdown()
+		count = get_read_time(html_str)
+		instance.read_time = count
 
 pre_save.connect(pre_save_post_receiver, sender=Post)
