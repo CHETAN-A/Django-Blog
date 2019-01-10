@@ -43,17 +43,22 @@
 
 	{% include "message_display.html" %}
 	<div class="container">
-		<ul class="breadcrumb">
-			<li><a href="{% url 'posts:list' %}">Home </a></li> | 
-			<li><a href="{% url 'posts:create' %}">Create Post</a></li>
+		<nav class="navbar  navbar-expand-lg navbar-dark bg-dark">
+			<div class="navbar-nav col-md-12">
+				<div class="nav-item col-md-1"><a class="nav-link" href="{% url 'posts:list' %}">Home </a></div> 
+				<div class="nav-item col-md-2"><a class="nav-link" href="{% url 'posts:create' %}">Create Post</a></div>
 
-			{% if not request.user.is_authenticated %}
-			<li class="pull-right"><a href="{% url 'login' %}">Login</a></li>|
-			<li class="pull-right"><a href="{% url 'register' %}">Register</a></li>
-			{% else %}
-			<li class="pull-right"><a href="{% url 'logout' %}">Logout</a></li>
-			{% endif %}
-		</ul>
+				{% if not request.user.is_authenticated %}
+				<div class="col-md-6"></div>
+				<div class="col-md-1 nav-item  mr-sm-2"><a class="nav-link" href="{% url 'login' %}">Login</a></div>
+				<div class="col-md-1 nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></div>
+				{% else %}
+				<div class="col-md-8"></div>
+				<div class="col-md-1 nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></div>
+				{% endif %}
+			</div>
+		</nav>
+		<br/>
 		{% block headOfpage %} {% endblock headOfpage %}
 		{% block content %}
 		{% endblock content %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block active %} active{% endblock active %}
-{% block headOfpage %} {{title}} {% endblock headOfpage %}
+{% block headOfpage %}<!--  {{title}} --> {% endblock headOfpage %}
 {% block content %}
 
 <div class="row">
@@ -27,7 +27,7 @@
 					{% if obj.draft %} <h3>Draft</h3>{% endif %} {% if obj.publish > today %} <h3>Future Post</h3>{% endif %}
 					<h5><a href="{{obj.get_abs_url}}">{{obj.title}}</a> <small>{{obj.timestamp|timesince}} ago</small></h5>
 					<p>Author : {{obj.user}}</p>
-					<p class="">{{obj.get_markdown|truncatechars_html:120}}</p>
+					<p class="">{{obj.get_markdown|truncatechars_html:50}}</p>
 					<p><a href="{{obj.get_abs_url}}" class="btn btn-primary" role="button"> view </a></p>
 				</div>
 			</div>
