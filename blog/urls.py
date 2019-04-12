@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from accounts.views import ( login_view, register_view, logout_view)
+from posts.views import (grafana)
 # from posts import urls
 
 urlpatterns = [
@@ -26,7 +27,11 @@ urlpatterns = [
     url(r'^login/',login_view,name='login'),
     url(r'^logout/',logout_view,name='logout'),
     url(r'^register/',register_view,name='register'),
-    url(r'^', include("posts.urls",namespace = "posts"))
+    url(r'^grafana/', grafana,name='grafana'),
+    url(r'^api/users/', include("accounts.api.urls",namespace = "users_api")),
+    url(r'^api/comments/', include("comments.api.urls",namespace = "comments_api")),
+    url(r'^api/posts/', include("posts.api.urls",namespace = "posts_api")),
+    url(r'^', include("posts.urls",namespace = "posts")),
 ]
 
 if settings.DEBUG:

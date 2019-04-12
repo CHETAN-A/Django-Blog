@@ -15,6 +15,9 @@ from comments.forms import CommentForm
 from .utils import get_read_time
 # Create your views here.
 
+def grafana(request):
+	return render(request,"grafana.html")
+	
 def create(request):
 	if not request.user.is_superuser or not request.user.is_staff:
 		raise Http404

@@ -25,7 +25,7 @@ SECRET_KEY = '$1^jlgoe@um@wh3*leh$tjoldn0ifkar_)8=8v1d)f%=5ty=!v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.0.155','localhost']
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     #local app
     'comments',
     'posts',
+    'rest_framework',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

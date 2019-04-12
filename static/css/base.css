@@ -13,3 +13,13 @@ h3{
 .blockquote{
 	padding-left: 10%;
 }
+.pull-right{
+	float: right; 
+}
+.navbar{
+	margin-top: 2%;
+	border-radius: 2.25rem;
+}
+.navbar-nav > .nav-item{
+	margin-left: auto;
+}

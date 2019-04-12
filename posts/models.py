@@ -44,6 +44,9 @@ class Post(models.Model):
 	def get_abs_url(self):
 		return reverse("posts:detail",kwargs = {"slug":self.slug})
 
+	def get_api_url(self):
+		return reverse("posts_api:detail",kwargs = {"slug":self.slug})
+
 	def get_abs_editurl(self):
 		return reverse("posts:update",kwargs = {"slug":self.slug})
 
@@ -94,5 +97,7 @@ def pre_save_post_receiver(sender, instance, *args, **kwargs):
 		html_str= instance.get_markdown()
 		count = get_read_time(html_str)
 		instance.read_time = count
+		print(count)
+		print("hii")
 
 pre_save.connect(pre_save_post_receiver, sender=Post)

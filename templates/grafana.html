@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block grafanaactive %} active{% endblock grafanaactive %}
+{% block headOfpage %}<!--  {{title}} --> {% endblock headOfpage %}
+{% block content %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+	function login_grafana() {
+		console.log("Hey");
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+			if( this.status == 200){
+				// document.getElementById("demo").innerHTML = this.responseText;
+				// document.getElementById("grafana").innerHTML = this.responseText;
+				var binaryData = [];
+				binaryData.push(this.response);
+				var data_url = window.URL.createObjectURL(new Blob(binaryData, {type: "text/html"}));
+				// var data_url = URL.createObjectURL(this.response);
+				// console.log(this.response)
+      			document.querySelector('#grafana').src = data_url;
+			} else {
+				console.error("errorssss");
+			}
+		};
+		xhttp.open("GET","http://admin:admin@10.0.0.134/d/915Kgn9iz/node-exporter-full?refresh=5s&orgId=1&panelId=77&fullscreen&from=1550740512118&to=1550826912119&var-job=CIT&var-node=10.0.0.201&var-port=9100");
+		// xhttp.setRequestHeader("X-WEBAUTH-NAME","admin")
+		// xhttp.setRequestHeader("X-WEBAUTH-NAME","admin@stackuptech.com")
+		// xhttp.setRequestHeader("Access-Control-Allow-Origin","allow");
+		// xhttp.setRequestHeader("Access-Control-Allow-Method","GET, POST, OPTIONS, PUT, DELETE")
+		// xhttp.setRequestHeader("Access-Control-Allow-Credentials","true");
+		// xhttp.setRequestHeader("Access-Control-Allow-Headers","Authorization,Origin,Content-Type,Accept");
+		// xhttp.setRequestHeader("Authorization","Bearer eyJrIjoiZDdpN00wZUtxRlVoUzRoeXpIR2F5eHhrUkw2ZXdqUXgiLCJuIjoia2V5IiwiaWQiOjF9");// + window.btoa("admin:admin"));
+		xhttp.send();
+	}
+</script>
+<div class="container">
+	<button onclick="login_grafana()">Login</button>
+	<p id="demo"></p>
+	<div class="row">
+
+		<!-- <iframe id="grafana" src="http://admin:admin@10.0.0.134/d/915Kgn9iz/node-exporter-full?refresh=5s&orgId=1&panelId=77&fullscreen&from=1550740512118&to=1550826912119&var-job=CIT&var-node=10.0.0.201&var-port=9100" width="1000px"sandbox="allow-forms allow-popups allow-same-origin allow-scripts"  height="800px" align="middle"></iframe> -->
+		<div class="col-md-12">
+			<iframe src="https://10.0.0.43:3000/d-solo/IKua5priz/node-exporter-full?orgId=1&refresh=5s&panelId=77&theme=light" width="450" height="200" frameborder="0"></iframe>
+			<iframe src="https://10.0.0.43:3000/d-solo/IKua5priz/node-exporter-full?orgId=1&refresh=5s&panelId=78&theme=light" width="450" height="200" frameborder="0"></iframe>
+		</div>
+		<div class="col-md-12">
+			<iframe src="https://10.0.0.43:3000/d-solo/IKua5priz/node-exporter-full?orgId=1&refresh=5s&panelId=60&theme=light" width="450" height="200" frameborder="0"></iframe>
+			<iframe src="https://10.0.0.43:3000/d-solo/IKua5priz/node-exporter-full?orgId=1&refresh=5s&panelId=9&theme=light" width="450" height="200" frameborder="0"></iframe>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	// $(document).ready(function() {
+
+	//     $("#grafana").submit(function(e) {
+	//     	e.preventDefault();
+			// $.ajax(
+		 //    {
+		 //    	// console.log("Before geafa");
+		 //      type: 'GET',
+		 //      url: 'http://admin:admin@10.0.0.134/dashboard/db/node-exporter-full',
+		 //      contentType: 'application/json',
+		 //       xhrFields: {
+			//         withCredentials: false
+			//     },
+		 //      // beforeSend: function(xhr, settings) {
+		 //      //   xhr.setRequestHeader(
+		 //      //     'Authorization', 'Basic ' + window.btoa('admin:admin')
+		 //      //   );
+		 //      // },
+		 //      success: function(data) {
+		 //        // $('#grafana').attr('src', 'http://admin:admin@10.0.0.134/dashboard/db/node-exporter-full');
+		 //        // $('#grafana').contents().find('html').html(data);
+		 //      //   var iframeDoc = $("#grafana").get(0).contentDocument;
+			//      // iframeDoc.open();
+			//      // iframeDoc.write(data);
+			//      // iframeDoc.close();
+		 //      }
+		 //    }
+		 //  );
+	//	});
+//	}
+</script>
+{% endblock content %}
